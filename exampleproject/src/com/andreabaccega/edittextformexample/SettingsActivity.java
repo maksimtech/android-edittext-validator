@@ -66,6 +66,15 @@ public class SettingsActivity
     }
 
     /**
+     * Validates that the fragment to be loaded is a valid type for this activity.
+     * This prevents Fragment Injection vulnerabilities (CVE-2013-6271).
+     */
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        return ContactPreferenceFragment.class.getName().equals(fragmentName);
+    }
+
+    /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -89,7 +98,7 @@ public class SettingsActivity
         // Class<ContactPreferenceFragment> a = ContactPreferenceFragment.class;
 
         // In the simplified UI, fragments are not used at all and we instead
-        // use the older PreferenceActivity APIs.
+ * use the older PreferenceActivity APIs.
 
         // Add 'general' preferences.
         PreferenceCategory fakeHeader = new PreferenceCategory(this);
