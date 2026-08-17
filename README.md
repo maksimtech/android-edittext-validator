@@ -1,5 +1,6 @@
 # Android Form EditText
 [![Release](https://jitpack.io/v/com.andreabaccega/android-edittext-validator.svg)](https://jitpack.io/#com.andreabaccega/android-edittext-validator)
+[![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://app.codspeed.io/maksimtech/android-edittext-validator?utm_source=badge)
 
 
 Android form edit text is an extension of EditText that brings data validation facilities to the edittext.
@@ -281,6 +282,34 @@ With these binary operator validators you'll be able to perform as many differen
   }
 ```
 
+
+# Benchmarks
+
+The validators run on every text change of a form field, so their cost is paid
+on each keystroke. They are benchmarked with [JMH](https://github.com/openjdk/jmh)
+and tracked continuously on [CodSpeed](https://app.codspeed.io/maksimtech/android-edittext-validator).
+
+The benchmarks live in the `benchmarks` project, which is independent from the
+Android build and needs a JDK 21:
+
+```bash
+cd benchmarks
+./gradlew jmh
+```
+
+Running them the way CI does, with the CodSpeed runner:
+
+```bash
+git submodule update --init --recursive
+cd benchmarks
+codspeed run --mode walltime -- ./gradlew --no-daemon jmh
+```
+
+`--no-daemon` is needed under the CodSpeed runner: a lingering Gradle daemon
+keeps the runner waiting for the process tree after the benchmarks are done.
+
+See `benchmarks/src/framework/README.md` for how the validators are run outside
+of an Android device.
 
 # Author
 
