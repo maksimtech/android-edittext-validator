@@ -28,3 +28,8 @@ local.properties
 gradle/
 gradlew
 gradlew.bat
+
+# the benchmarks project ships its own gradle wrapper
+!benchmarks/gradle/
+!benchmarks/gradlew
+!benchmarks/gradlew.bat

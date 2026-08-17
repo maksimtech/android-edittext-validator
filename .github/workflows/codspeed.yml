@@ -1,0 +1,36 @@
+name: CodSpeed Benchmarks
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  # `workflow_dispatch` allows CodSpeed to trigger backtest
+  # performance analysis in order to generate initial data.
+  workflow_dispatch:
+
+jobs:
+  benchmarks:
+    name: Run benchmarks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # required for actions/checkout
+      id-token: write # required for OIDC authentication with CodSpeed
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # the CodSpeed JMH fork and its native hooks live in submodules
+          submodules: recursive
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Run the benchmarks
+        uses: CodSpeedHQ/action@v5
+        with:
+          mode: walltime
+          working-directory: benchmarks
+          run: ./gradlew jmh
