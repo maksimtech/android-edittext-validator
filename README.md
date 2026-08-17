@@ -305,6 +305,10 @@ cd benchmarks
 codspeed run --mode walltime -- ./gradlew jmh
 ```
 
+In CI a curated subset of the suite is measured, covering each family of
+validators, so that the reported numbers stay comparable without the workflow
+taking too long. Locally the whole suite runs.
+
 See `benchmarks/src/framework/README.md` for how the validators are run outside
 of an Android device.
 

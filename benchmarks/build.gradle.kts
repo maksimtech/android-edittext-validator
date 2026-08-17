@@ -42,7 +42,7 @@ jmh {
 
     benchmarkMode.set(listOf("avgt"))
     timeUnit.set("ns")
-    warmupIterations.set(2)
+    warmupIterations.set(1)
     warmup.set("1s")
     iterations.set(3)
     timeOnIteration.set("1s")
@@ -53,4 +53,29 @@ jmh {
     // each measurement starts. Without this, a GC pause can land inside the
     // measurement window and show up as a spurious regression in CI.
     forceGC.set(true)
+
+    if (System.getenv("CODSPEED_ENV") != null) {
+        logger.lifecycle("CODSPEED_ENV detected — running the curated CI benchmark subset")
+
+        // Every forked JVM is instrumented and profiled by the CodSpeed runner,
+        // which costs much more than the measurement itself. Use a single fork
+        // over a subset covering each family of validators to keep the CI
+        // runtime reasonable. The whole suite still runs locally.
+        fork.set(1)
+
+        // me.champeau.jmh joins `includes` with commas into a single positional
+        // regex passed to JMH, so multiple entries collapse into one pattern
+        // with literal commas and match nothing. Use a single alternation.
+        includes.set(
+            listOf(
+                ".*(" +
+                    "PatternValidatorsBenchmark\\.(emailValid|emailInvalid|alphaNumericValid)" +
+                    "|SimpleValidatorsBenchmark\\.(notEmpty|numericRangeValid)" +
+                    "|CreditCardValidatorBenchmark\\.validChecksum" +
+                    "|DateValidatorBenchmark\\.singleFormatValid" +
+                    "|CompositeValidatorsBenchmark\\.(andAllPassing|orLastPassing)" +
+                    ").*"
+            )
+        )
+    }
 }
