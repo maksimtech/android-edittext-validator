@@ -38,4 +38,7 @@ jobs:
         with:
           mode: walltime
           working-directory: benchmarks
-          run: ./gradlew jmh
+          # `--no-daemon` matters here: a lingering Gradle daemon keeps the
+          # CodSpeed runner waiting for the process tree long after the
+          # benchmarks are done.
+          run: ./gradlew --no-daemon jmh

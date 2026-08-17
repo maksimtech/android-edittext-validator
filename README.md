@@ -302,12 +302,11 @@ Running them the way CI does, with the CodSpeed runner:
 ```bash
 git submodule update --init --recursive
 cd benchmarks
-codspeed run --mode walltime -- ./gradlew jmh
+codspeed run --mode walltime -- ./gradlew --no-daemon jmh
 ```
 
-In CI a curated subset of the suite is measured, covering each family of
-validators, so that the reported numbers stay comparable without the workflow
-taking too long. Locally the whole suite runs.
+`--no-daemon` is needed under the CodSpeed runner: a lingering Gradle daemon
+keeps the runner waiting for the process tree after the benchmarks are done.
 
 See `benchmarks/src/framework/README.md` for how the validators are run outside
 of an Android device.
